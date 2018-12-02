@@ -89,20 +89,20 @@ fi
 # Hass has a bug where packaged automations don't work unless you have at least one
 # automation manually created outside of the packages.  Attempt to test for that and
 # create a dummy automation if an empty automations.yaml file is found.
-if grep "^automation: \!include automations.yaml" configuration.yaml > /dev/null
-then
-  if [ -f automations.yaml ]
-  then
-    if [[ $(< automations.yaml) == "[]" ]]
-    then
-      echo "WARNING: empty automations.yaml found, creating DUMMY automation for package compatibility"
-      echo "- action: []" > automations.yaml
-      echo "  id: DUMMY" >> automations.yaml
-      echo "  alias: DUMMY Can Be Deleted After First Automation Has Been Added" >> automations.yaml
-      echo "  trigger: []" >> automations.yaml
-    fi
-  fi
-fi
+# if grep "^automation: \!include automations.yaml" configuration.yaml > /dev/null
+# then
+#   if [ -f automations.yaml ]
+#   then
+#     if [[ $(< automations.yaml) == "[]" ]]
+#     then
+#       echo "WARNING: empty automations.yaml found, creating DUMMY automation for package compatibility"
+#       echo "- action: []" > automations.yaml
+#       echo "  id: DUMMY" >> automations.yaml
+#       echo "  alias: DUMMY Can Be Deleted After First Automation Has Been Added" >> automations.yaml
+#       echo "  trigger: []" >> automations.yaml
+#     fi
+#   fi
+# fi
 
 # Santize the requested devicename to work with hass
 hasp_device=`echo "$hasp_input_name" | tr '[:upper:]' '[:lower:]' | tr ' [:punct:]' '_'`
@@ -117,7 +117,7 @@ fi
 hasp_temp_dir=`mktemp -d`
 
 # Download latest packages
-wget -q -P $hasp_temp_dir https://github.com/aderusha/HASwitchPlate/raw/master/Home_Assistant/hasppackages.tar.gz
+wget -q -P $hasp_temp_dir https://github.com/McCroden/HASwitchPlate/raw/master/Home_Assistant/hasppackages.tar.gz
 tar -zxf $hasp_temp_dir/hasppackages.tar.gz -C $hasp_temp_dir
 rm $hasp_temp_dir/hasppackages.tar.gz
 
@@ -125,10 +125,10 @@ rm $hasp_temp_dir/hasppackages.tar.gz
 if [[ "$hasp_input_name" != "plate01" ]]
 then
   # rename text in contents of files
-  sed -i -- 's/plate01/'"$hasp_device"'/g' $hasp_temp_dir/packages/plate01/hasp_plate01_*.yaml
+  sed -i -- 's/plate01/'"$hasp_device"'/g' $hasp_temp_dir/components/ha_switchplate/plate01/hasp_plate01_*.yaml
   # rename files and folder - thanks to @cloggedDrain for this loop!
-  mkdir $hasp_temp_dir/packages/$hasp_device
-  for file in $hasp_temp_dir/packages/plate01/*
+  mkdir $hasp_temp_dir/components/ha_switchplate/$hasp_device
+  for file in $hasp_temp_dir/components/ha_switchplate/plate01/*
   do
     new_file=`echo $file | sed s/plate01/$hasp_device/g`
     if [ -f $file ]
@@ -141,9 +141,9 @@ then
       fi
     fi
   done
-  rm -rf $hasp_temp_dir/packages/plate01
+  rm -rf $hasp_temp_dir/components/ha_switchplate/plate01
 fi
 
 # Copy everything over and burn the evidence
-cp -rf $hasp_temp_dir/* .
+cp -rf $hasp_temp_dir/components/ha_switchplate ./components/ha_switchplate/
 rm -rf $hasp_temp_dir
