@@ -62,29 +62,29 @@ then
 fi
 
 # Enable recorder if not enabled to persist input values
-if ! grep "^recorder:" configuration.yaml > /dev/null
-then
-  echo "recorder:" >> configuration.yaml
-  echo "  include:" >> configuration.yaml
-  echo "    domains:" >> configuration.yaml
-  echo "    - automation" >> configuration.yaml
-  echo "    - input_boolean" >> configuration.yaml
-  echo "    - input_number" >> configuration.yaml
-  echo "    - input_select" >> configuration.yaml
-  echo "    - input_datetime" >> configuration.yaml
-  echo "    - input_text" >> configuration.yaml
-fi
+# if ! grep "^recorder:" configuration.yaml > /dev/null
+# then
+#   echo "recorder:" >> configuration.yaml
+#   echo "  include:" >> configuration.yaml
+#   echo "    domains:" >> configuration.yaml
+#   echo "    - automation" >> configuration.yaml
+#   echo "    - input_boolean" >> configuration.yaml
+#   echo "    - input_number" >> configuration.yaml
+#   echo "    - input_select" >> configuration.yaml
+#   echo "    - input_datetime" >> configuration.yaml
+#   echo "    - input_text" >> configuration.yaml
+# fi
 
 # Enable MQTT if not enabled
-if ! grep "^mqtt:" configuration.yaml > /dev/null
-then
-  echo "mqtt:" >> configuration.yaml
-  # Check to see if we're running hass.io
-  if [ -f /etc/alpine-release ]
-  then
-    echo "  broker: core-mosquitto" >> configuration.yaml
-  fi
-fi
+# if ! grep "^mqtt:" configuration.yaml > /dev/null
+# then
+#   echo "mqtt:" >> configuration.yaml
+#   # Check to see if we're running hass.io
+#   if [ -f /etc/alpine-release ]
+#   then
+#     echo "  broker: core-mosquitto" >> configuration.yaml
+#   fi
+# fi
 
 # Hass has a bug where packaged automations don't work unless you have at least one
 # automation manually created outside of the packages.  Attempt to test for that and
